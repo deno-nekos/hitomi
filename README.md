@@ -16,6 +16,7 @@ Result will be:
 Kyaru-chan to Densetsu no Maken! | 캬루와 전설의 마검!(1806299)
 ㄴAuthor: yuizaki kazuya (cocoa holic)
 ㄴChararchers: kyaru
+ㄴthumbnail saved at ./example/hentai.webp
 ㄴhas 26 images
   ㄴhttps://ba.hitomi.la/webp/9/85/<filename>.webp
   ㄴhttps://aa.hitomi.la/webp/0/4b/<filename>.webp

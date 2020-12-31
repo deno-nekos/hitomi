@@ -7,13 +7,14 @@ import { GALLERY_INFO, GALLERY_PAGE, IMAGE_URL } from "../consts/endpoints.ts"
 import { AUTHOR_SELECTOR, GALLERY_INFO_SELECTOR } from "../consts/selectors.ts"
 import { AdditionalInfo, GalleryFileM, GalleryInfo, GalleryTagM } from "../types/infotypes.ts"
 import { GALLERY_CHARACTERS_SPLITTER, GALLERY_INFO_SPLITTER, GALLERY_URL_SPLITTER } from "../consts/regexps.ts"
+import { BASEURL } from "../consts/baseURLs.ts"
 
 export class Client {
   private header: Headers
   constructor (options?: ClientOption) {
     this.header = new Headers({
       'User-Agent': options?.header.get('User-Agent') || USER_AGENT,
-      'ACCEPT' : options?.header.get('ACCEPT') || ACCEPT
+      'Accept': options?.header.get('ACCEPT') || ACCEPT
     })
   }
 
@@ -89,5 +90,20 @@ export class Client {
       date: new Date(date),
       files: fileInfo,
       ...addition, ...etc }
+  }
+
+  /**
+   * get image blob from given hitomi.la url
+   * @param url url from getGalleryInfo()
+   */
+  public async getImage (url: string): Promise<Blob> {
+    return await fetch(url, {
+      method: 'GET',
+      headers: new Headers({
+        'User-Agent': USER_AGENT,
+        'Accept': ACCEPT,
+        'Referer': BASEURL
+      })
+    }).then((res) => res.blob())
   }
 }
