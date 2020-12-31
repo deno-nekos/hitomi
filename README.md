@@ -13,12 +13,16 @@ deno run -A 'https://deno.land/x/hitomi/example/test.ts'
 
 Result will be:
 ```
-Kyaru-chan to Densetsu no Maken! | 캬루와 전설의 마검!(1806299) has 26 images
-ㄴhttps://ba.hitomi.la/webp/9/85/<filenames>.webp
-ㄴhttps://aa.hitomi.la/webp/0/4b/<filenames>.webp
-ㄴhttps://ca.hitomi.la/webp/9/a1/<filenames>.webp
-ㄴhttps://aa.hitomi.la/webp/9/60/<filenames>.webp
-ㄴ...
+Kyaru-chan to Densetsu no Maken! | 캬루와 전설의 마검!(1806299)
+ㄴAuthor: yuizaki kazuya (cocoa holic)
+ㄴChararchers: kyaru
+ㄴhas 26 images
+  ㄴhttps://ba.hitomi.la/webp/9/85/<filename>.webp
+  ㄴhttps://aa.hitomi.la/webp/0/4b/<filename>.webp
+  ㄴhttps://ca.hitomi.la/webp/9/a1/<filename>.webp
+  ㄴhttps://aa.hitomi.la/webp/9/60/<filename>.webp
+  ㄴhttps://aa.hitomi.la/webp/3/2c/<filename>.webp
+  ㄴhttps://ba.hitomi.la/webp/2/a6/<filename>.webp
 ```
 
 ## license

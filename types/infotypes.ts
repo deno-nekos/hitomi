@@ -8,12 +8,21 @@ export interface GalleryInfo {
   language: Language,
   date: Date,
   files: GalleryFileM[]
+  author?: string,
+  group?: string,
+  chararchers?: string[]
 }
 
 export interface GalleryTagM {
   gender: 'male' | 'female' | 'none',
   url: string,
   tag: string
+}
+
+export interface AdditionalInfo {
+  author?: string,
+  group?: string,
+  chararchers?: string[]
 }
 
 export interface Title {
