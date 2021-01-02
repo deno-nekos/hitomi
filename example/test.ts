@@ -1,4 +1,5 @@
 import { Client } from '../mod.ts'
+import { OrderBy } from "../types/options.ts"
 
 const GALLERY_ID = 1806299
 
@@ -19,3 +20,6 @@ console.log('ㄴhas ' + gallery.files.length + ' images')
 for (const file of gallery.files) {
   console.log('  ㄴ' + file.url)
 }
+
+const ids = await client.listGalleries(OrderBy.popular, { language: 'korean' })
+console.log('ㄴTop 10 popular galleries in korean language: ' + ids)

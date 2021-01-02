@@ -24,6 +24,7 @@ Kyaru-chan to Densetsu no Maken! | 캬루와 전설의 마검!(1806299)
   ㄴhttps://aa.hitomi.la/webp/9/60/<filename>.webp
   ㄴhttps://aa.hitomi.la/webp/3/2c/<filename>.webp
   ㄴhttps://ba.hitomi.la/webp/2/a6/<filename>.webp
+ㄴTop 10 popular galleries in korean language: 1262768,1503558,1298194,1514404,1560024,1469394,1626682,1554119,1625590,1569735
 ```
 
 ## license

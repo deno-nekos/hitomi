@@ -1,13 +1,13 @@
 import { DOMParser } from '../deps.ts'
-import { ClientOption } from '../types/options.ts'
+import { BASEURL } from "../consts/baseURLs.ts"
+import { ClientOption, ListOption, OrderBy } from '../types/options.ts'
 import { GalleryData } from "../types/datatypes.ts"
 import { ACCEPT, USER_AGENT } from '../consts/headers.ts'
 import { getSubdomainFromHash, hashProcess } from "../utils/imageUtils.ts"
-import { GALLERY_INFO, GALLERY_PAGE, IMAGE_URL } from "../consts/endpoints.ts"
 import { AUTHOR_SELECTOR, GALLERY_INFO_SELECTOR } from "../consts/selectors.ts"
 import { AdditionalInfo, GalleryFileM, GalleryInfo, GalleryTagM } from "../types/infotypes.ts"
-import { GALLERY_CHARACTERS_SPLITTER, GALLERY_INFO_SPLITTER, GALLERY_URL_SPLITTER } from "../consts/regexps.ts"
-import { BASEURL } from "../consts/baseURLs.ts"
+import { GALLERY_INFO, GALLERY_PAGE, IMAGE_URL, LANGUAGE_SUPPORT_URL, LIST_GALLERIES_URL } from "../consts/endpoints.ts"
+import { GALLERY_CHARACTERS_SPLITTER, GALLERY_INFO_SPLITTER, GALLERY_URL_SPLITTER, LANGUAGE_SUPPORT_SPLITTER } from "../consts/regexps.ts"
 
 export class Client {
   private header: Headers
@@ -48,6 +48,66 @@ export class Client {
         .replace(GALLERY_CHARACTERS_SPLITTER, ',').split(',').filter((v) => v.length > 0)
 
     return { author, group, chararchers }
+  }
+
+  private async _blobFetch (url: string, header = {}): Promise<Blob> {
+    return await fetch(url, {
+      method: 'GET',
+      headers: new Headers({
+        'User-Agent': USER_AGENT,
+        'Accept': ACCEPT,
+        ...header
+      })
+    }).then((res) => res.blob())
+  }
+
+  /**
+   * fetch support languages from hitomi.la
+   */
+  public async getSupportLanguages () {
+    const res = await this._fetch(LANGUAGE_SUPPORT_URL)
+    const obj = JSON.parse(res.split(LANGUAGE_SUPPORT_SPLITTER)[1].split(';')[0])
+
+    return Object.keys(obj)
+  }
+
+  /**
+   * fetch gallery list
+   * @param orderBy 'recent' or 'popular'
+   * @param options.page page of results
+   * @param options.limit galleries per page
+   * @param options.language language for fetch
+   * @param options.checkLang check lnguage support
+   */
+  public async listGalleries (orderBy: OrderBy, options: ListOption = { page: 0, limit: 10, language: 'all', checkLang: true }): Promise<number[]> {
+    if (!options.page) options.page = 0
+    if (!options.limit) options.limit = 10
+    if (!options.language) options.language = 'all'
+    if (!options.checkLang) options.checkLang = true
+
+    const galleries: number[] = []
+
+    if (options.checkLang) {
+      const supports = ['all', ...await this.getSupportLanguages()]
+      if (!supports.includes(options.language))
+        throw new Error(options.language + ' is not in support languages, (you can skip this check with options.checkLang)')
+    }
+
+    const startByte = options.page * options.limit * 4
+    const endByte = startByte + options.limit * 4
+
+    const header: {[key:string]:string} = {}
+    header.Range = 'bytes=' + startByte + '-' + endByte
+
+    const blob = await this._blobFetch(LIST_GALLERIES_URL(orderBy, options.language), header)
+    const buffer = await blob.arrayBuffer()
+    const view = new DataView(buffer)
+
+    const total = view.byteLength / 4
+    for (let i = 0; i < (total - 1); i++)
+      galleries.push(view.getInt32(i * 4, false))
+
+    return galleries
   }
 
   /**
@@ -96,14 +156,7 @@ export class Client {
    * get image blob from given hitomi.la url
    * @param url url from getGalleryInfo()
    */
-  public async getImage (url: string): Promise<Blob> {
-    return await fetch(url, {
-      method: 'GET',
-      headers: new Headers({
-        'User-Agent': USER_AGENT,
-        'Accept': ACCEPT,
-        'Referer': BASEURL
-      })
-    }).then((res) => res.blob())
+  public async getImage (url: string) {
+    return await this._blobFetch(url, { Referer: BASEURL })
   }
 }
